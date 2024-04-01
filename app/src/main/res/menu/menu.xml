@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/item_1"
+        android:enabled="true"
+        android:icon="@drawable/ic_note_24dp"
+        android:iconTint="@color/white"
+        android:title="Home" />
+    <item
+        android:id="@+id/item_2"
+        android:enabled="true"
+        android:icon="@drawable/ic_add_24"
+        android:title="Add" />
+</menu>

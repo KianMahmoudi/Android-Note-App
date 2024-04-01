@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="34dp"
+    android:layout_marginTop="94dp"
+    android:layout_marginRight="34dp"
+    android:layout_marginBottom="94dp"
+    android:background="@drawable/add_note_dialog_background"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="34dp"
+        android:layout_marginTop="34dp"
+        android:fontFamily="@font/open_sans_bold"
+        android:text="Add new ..."
+        android:textColor="@color/background"
+        android:textSize="32dp" />
+
+    <TextView
+        android:id="@+id/tv_simpleNote"
+        style="@style/btn_add_new_note_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Simple note" />
+
+    <TextView
+        android:id="@+id/tv_listNote"
+        style="@style/btn_add_new_note_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List note" />
+
+    <TextView
+        android:id="@+id/tv_recordNote"
+        style="@style/btn_add_new_note_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="Record note" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_exit_addNewNoteDialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:fontFamily="@font/open_sans_bold"
+        android:text="Exit"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/btn_color"
+        app:icon="@drawable/ic_close_24"
+        app:iconGravity="textEnd"
+        app:iconTint="@color/white" />
+
+</LinearLayout>
