@@ -1,6 +1,7 @@
 package com.example.note;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,15 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.title.setText(listNotes.get(position).getTitle());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, ListNoteActivity.class);
+                i.putExtra("id",listNotes.get(position).getId());
+                i.putExtra("title", listNotes.get(position).getTitle().toString());
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override

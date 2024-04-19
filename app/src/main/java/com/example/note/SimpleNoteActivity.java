@@ -1,6 +1,7 @@
 package com.example.note;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -56,7 +57,9 @@ public class SimpleNoteActivity extends Activity {
                 SimpleNote simpleNote = new SimpleNote(noteTitle.getText().toString(), noteText.getText().toString());
                 db.getSimpleNoteDao().insert(simpleNote);
             }
-            finish();
+            Intent i = new Intent(this, HomePage.class);
+            i.putExtra("class", "simpleNote");
+            startActivity(i);
         });
 
     }

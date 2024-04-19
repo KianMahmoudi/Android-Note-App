@@ -23,6 +23,7 @@ public class HomePage extends AppCompatActivity {
     private ListNoteAdapter listNoteAdapter;
     private RecyclerView recyclerView;
     private AppDatabase db;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class HomePage extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
 
-        TabLayout tabLayout = findViewById(R.id.tabs_homePage);
+        tabLayout = findViewById(R.id.tabs_homePage);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -89,9 +90,22 @@ public class HomePage extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(simpleNoteAdapter);
 
-
+        if (getIntent().hasExtra("class")) {
+            if (getIntent().getExtras().getString("class").equals("simpleNote")) {
+                List<SimpleNote> simpleNotesTwo = db.getSimpleNoteDao().getAll();
+                simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(simpleNoteAdapter);
+                tabLayout.selectTab(tabLayout.getTabAt(0));
+            } else if (getIntent().getExtras().getString("class").equals("listNote")) {
+                List<ListNote> listNotes = db.getListNoteDao().getAll();
+                listNoteAdapter = new ListNoteAdapter(listNotes, HomePage.this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
+                recyclerView.setAdapter(listNoteAdapter);
+                tabLayout.selectTab(tabLayout.getTabAt(1));
+            }
+        }
     }
-
 
 
 }

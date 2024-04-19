@@ -18,4 +18,7 @@ public interface ListNoteDao {
     @Query("SELECT * FROM ListNote")
     List<ListNote> getAll();
 
+    @Query("SELECT * FROM ListNote WHERE note_id = :id")
+    ListNote getById(long id);
+
 }
