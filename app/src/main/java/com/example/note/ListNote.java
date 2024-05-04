@@ -1,36 +1,29 @@
 package com.example.note;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.example.note.ListNoteItems;
+
 import java.util.List;
 
-@Entity(tableName = "ListNote")
+@Entity(tableName = "listNote")
 public class ListNote {
-    @ColumnInfo(name = "note_id")
     @PrimaryKey(autoGenerate = true)
-    private Long id;
-
-    @ColumnInfo(name = "title")
+    private long id;
     private String title;
+    private List<ListNoteItems> items;
 
-    @ColumnInfo(name = "note")
-    private String note;
-
-    public String getNote() {
-        return note;
+    public ListNote(String title, List<ListNoteItems> items) {
+        this.title = title;
+        this.items = items;
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -42,8 +35,11 @@ public class ListNote {
         this.title = title;
     }
 
-    public ListNote(String title) {
-        this.title = title;
+    public List<ListNoteItems> getItems() {
+        return items;
     }
 
+    public void setItems(List<ListNoteItems> items) {
+        this.items = items;
+    }
 }

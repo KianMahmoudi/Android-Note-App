@@ -39,6 +39,7 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.ViewHo
                 Intent i = new Intent(context, ListNoteActivity.class);
                 i.putExtra("id",listNotes.get(position).getId());
                 i.putExtra("title", listNotes.get(position).getTitle().toString());
+
                 context.startActivity(i);
             }
         });
