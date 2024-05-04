@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -21,5 +22,7 @@ public interface ListNoteDao {
     @Query("SELECT * FROM ListNote WHERE id = :id ")
     ListNote getById(long id);
 
+    @Update
+    void update(ListNote listNote);
 
 }
