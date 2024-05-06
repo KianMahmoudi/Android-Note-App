@@ -2,25 +2,28 @@ package com.example.note;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import java.util.List;
 
 public class SimpleNoteAdapter extends RecyclerView.Adapter<SimpleNoteAdapter.ViewHolder> {
-
+    private AppDatabase db;
     private List<SimpleNote> simpleNotes;
     private Context context;
 
     public SimpleNoteAdapter(List<SimpleNote> simpleNotes, Context context) {
         this.simpleNotes = simpleNotes;
         this.context = context;
+        db = Room.databaseBuilder(context,
+                AppDatabase.class, "notes").allowMainThreadQueries().build();
     }
 
     @NonNull
@@ -40,6 +43,12 @@ public class SimpleNoteAdapter extends RecyclerView.Adapter<SimpleNoteAdapter.Vi
             intent.putExtra("note", simpleNotes.get(position).getNote());
             context.startActivity(intent);
         });
+        holder.btnDelete.setOnClickListener(v -> {
+            db.getSimpleNoteDao().delete(simpleNotes.get(position));
+            simpleNotes.remove(position);
+            notifyItemRemoved(position);
+        });
+
     }
 
     @Override
@@ -50,18 +59,18 @@ public class SimpleNoteAdapter extends RecyclerView.Adapter<SimpleNoteAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
+        private ImageView btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.item_simpleNote_title);
+            btnDelete = itemView.findViewById(R.id.btn_delete);
         }
 
         public void bind(SimpleNote simpleNote) {
             title.setText(simpleNote.getTitle());
         }
     }
-
-
 
 }
 
