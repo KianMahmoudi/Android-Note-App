@@ -64,5 +64,12 @@ public class SimpleNoteActivity extends Activity {
 
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this, HomePage.class);
+        i.putExtra("class", "simpleNote");
+        startActivity(i);
+        finish();
+    }
 }
