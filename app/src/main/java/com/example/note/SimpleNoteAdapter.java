@@ -1,6 +1,7 @@
 package com.example.note;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
@@ -18,6 +20,8 @@ public class SimpleNoteAdapter extends RecyclerView.Adapter<SimpleNoteAdapter.Vi
     private AppDatabase db;
     private List<SimpleNote> simpleNotes;
     private Context context;
+    private AlertDialog.Builder builder;
+
 
     public SimpleNoteAdapter(List<SimpleNote> simpleNotes, Context context) {
         this.simpleNotes = simpleNotes;
@@ -44,9 +48,21 @@ public class SimpleNoteAdapter extends RecyclerView.Adapter<SimpleNoteAdapter.Vi
             context.startActivity(intent);
         });
         holder.btnDelete.setOnClickListener(v -> {
-            db.getSimpleNoteDao().delete(simpleNotes.get(position));
-            simpleNotes.remove(position);
-            notifyItemRemoved(position);
+            builder = new AlertDialog.Builder(context);
+            builder.setTitle("Are you sure?");
+            builder.setMessage("Are you sure to delete this note?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        db.getSimpleNoteDao().delete(simpleNotes.get(position));
+                        simpleNotes.remove(position);
+                        notifyItemRemoved(position);
+                    }).setNegativeButton("No", (dialog, which) -> {
+                        dialog.cancel();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.setTitle("Are you sure?");
+            dialog.show();
+
         });
 
     }

@@ -1,6 +1,7 @@
 package com.example.note;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
@@ -17,16 +19,16 @@ import java.util.List;
 
 public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.ViewHolder> {
     private AppDatabase db;
-
     private List<ListNote> listNotes;
-
     private Context context;
+    private AlertDialog.Builder builder;
 
     public ListNoteAdapter(List<ListNote> listNotes, Context context) {
         this.listNotes = listNotes;
         this.context = context;
         db = Room.databaseBuilder(context,
                 AppDatabase.class, "notes").allowMainThreadQueries().build();
+
     }
 
     @NonNull
@@ -45,13 +47,22 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.ViewHo
             i.putExtra("title", listNotes.get(position).getTitle().toString());
             context.startActivity(i);
         });
-        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.getListNoteDao().delete(listNotes.get(position));
-                listNotes.remove(position);
-                notifyItemRemoved(position);
-            }
+        holder.btnDelete.setOnClickListener(v -> {
+            builder = new AlertDialog.Builder(context);
+            builder.setTitle("Are you sure?");
+            builder.setMessage("Are you sure to delete this note?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        db.getListNoteDao().delete(listNotes.get(position));
+                        listNotes.remove(position);
+                        notifyItemRemoved(position);
+                    })
+                    .setNegativeButton("No", (dialog, which) -> {
+                        dialog.cancel();
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.setTitle("Are you sure?");
+            dialog.show();
         });
     }
 

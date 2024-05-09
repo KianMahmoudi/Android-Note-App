@@ -24,8 +24,10 @@
             android:hint="do this..."
             android:textColor="@color/black"
             android:textSize="20dp"
+            android:layout_marginRight="16dp"
             android:textStyle="normal" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
 
 </LinearLayout>
