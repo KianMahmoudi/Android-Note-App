@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -12,22 +12,34 @@
         app:buttonTint="@color/black" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="#00000000"
+            android:ellipsize="middle"
             android:hint="do this..."
             android:textColor="@color/black"
             android:textSize="20dp"
             android:layout_marginRight="16dp"
-            android:textStyle="normal" />
+            android:textStyle="normal"
+            tools:text="dfsdfjsdfjlskfjksdfksdfkdsjfkdklfdsjflskdjflkkdjfkdjf" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_delete"
+        android:tint="@color/black"
+        android:visibility="visible" />
 
 </LinearLayout>

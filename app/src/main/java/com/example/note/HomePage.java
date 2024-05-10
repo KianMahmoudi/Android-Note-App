@@ -10,8 +10,6 @@ import androidx.room.Room;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.util.List;
-
 // HomePage.java
 
 import com.google.android.material.tabs.TabLayout;
@@ -53,12 +51,12 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getPosition() == 0) {
-                    List<SimpleNote> simpleNotes = db.getSimpleNoteDao().getAll();
+                    java.util.List<SimpleNote> simpleNotes = db.getSimpleNoteDao().getAll();
                     simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, HomePage.this);
                     recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
                     recyclerView.setAdapter(simpleNoteAdapter);
                 } else if (tab.getPosition() == 1) {
-                    List<ListNote> listNotes = db.getListNoteDao().getAll();
+                    java.util.List<ListNote> listNotes = db.getListNoteDao().getAll();
                     listNoteAdapter = new ListNoteAdapter(listNotes, HomePage.this);
                     recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
                     recyclerView.setAdapter(listNoteAdapter);
@@ -85,20 +83,20 @@ public class HomePage extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        List<SimpleNote> simpleNotes = db.getSimpleNoteDao().getAll();
+        java.util.List<SimpleNote> simpleNotes = db.getSimpleNoteDao().getAll();
         simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(simpleNoteAdapter);
 
         if (getIntent().hasExtra("class")) {
             if (getIntent().getExtras().getString("class").equals("simpleNote")) {
-                List<SimpleNote> simpleNotesTwo = db.getSimpleNoteDao().getAll();
+                java.util.List<SimpleNote> simpleNotesTwo = db.getSimpleNoteDao().getAll();
                 simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
                 recyclerView.setAdapter(simpleNoteAdapter);
                 tabLayout.selectTab(tabLayout.getTabAt(0));
             } else if (getIntent().getExtras().getString("class").equals("listNote")) {
-                List<ListNote> listNotes = db.getListNoteDao().getAll();
+                java.util.List<ListNote> listNotes = db.getListNoteDao().getAll();
                 listNoteAdapter = new ListNoteAdapter(listNotes, HomePage.this);
                 recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
                 recyclerView.setAdapter(listNoteAdapter);
