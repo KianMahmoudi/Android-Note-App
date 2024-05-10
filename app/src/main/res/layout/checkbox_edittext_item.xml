@@ -33,13 +33,14 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.appcompat.widget.AppCompatImageView
+    <ImageButton
         android:id="@+id/btn_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:background="@color/white"
         android:src="@drawable/ic_delete"
-        android:tint="@color/black"
-        android:visibility="visible" />
+        android:visibility="visible"
+        app:tint="@color/black" />
 
 </LinearLayout>

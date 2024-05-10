@@ -6,8 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdapter.ItemsViewHolder> {
@@ -33,9 +37,14 @@ public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdap
         updateItems(items);
     }
 
+    public void removeItem(ListNoteItems item, int position) {
+        items.remove(item);
+        notifyItemRemoved(position);
+    }
+
     public void updateItems(List<ListNoteItems> items) {
         this.items = items;
-        notifyItemInserted(items.size()-1);
+        notifyItemInserted(items.size() - 1);
     }
 
     @NonNull
@@ -48,6 +57,9 @@ public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdap
     @Override
     public void onBindViewHolder(@NonNull ItemsViewHolder holder, int position) {
         holder.bind(position);
+        holder.deleteBtn.setOnClickListener(v -> {
+            removeItem(items.get(position), position);
+        });
     }
 
     @Override
@@ -58,11 +70,14 @@ public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdap
     public class ItemsViewHolder extends RecyclerView.ViewHolder {
         EditText editText;
         CheckBox checkBox;
+        ImageButton deleteBtn;
 
         public ItemsViewHolder(@NonNull View itemView) {
             super(itemView);
             editText = itemView.findViewById(R.id.editText);
             checkBox = itemView.findViewById(R.id.checkBox);
+            deleteBtn = itemView.findViewById(R.id.btn_delete);
+
         }
 
         public void bind(int position) {
