@@ -3,6 +3,7 @@ package com.example.note;
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -16,8 +17,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 
@@ -29,6 +33,9 @@ public class RecordNoteActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private String audioSavePath = null;
     private int playingStatus = 0;
+    private ExtendedFloatingActionButton saveBtn;
+    private TextInputEditText title;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,7 +44,12 @@ public class RecordNoteActivity extends AppCompatActivity {
 
         recordingAudio = findViewById(R.id.recordingAudio);
         playingAudio = findViewById(R.id.playingAudio);
+        saveBtn = findViewById(R.id.fab_save_RecordNote);
+        title = findViewById(R.id.note_title_recordNote);
         ImageView btnClose = findViewById(R.id.btn_close_recordNote);
+
+        // Initialize Room database
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "notes").allowMainThreadQueries().build();
 
         btnClose.setOnClickListener(v -> finish());
 
@@ -45,7 +57,7 @@ public class RecordNoteActivity extends AppCompatActivity {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     Log.d("RecordNote", "ACTION_DOWN event fired");
-                    if (checkPermissions() == true) {
+                    if (checkPermissions()) {
                         startRecording();
                     } else {
                         ActivityCompat.requestPermissions(RecordNoteActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, 1);
@@ -88,7 +100,19 @@ public class RecordNoteActivity extends AppCompatActivity {
             }
         });
 
-
+        saveBtn.setOnClickListener(v -> {
+            String titleText = title.getText().toString();
+            if (audioSavePath != null && !audioSavePath.isEmpty()) {
+                RecordNote recordNote = new RecordNote(titleText, audioSavePath);
+                db.getRecordNoteDao().insert(recordNote);
+                Toast.makeText(this, "Recording saved successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No recording found to save", Toast.LENGTH_SHORT).show();
+            }
+            Intent i = new Intent(this, HomePage.class);
+            i.putExtra("class", "recordNote");
+            startActivity(i);
+        });
     }
 
     private boolean checkPermissions() {
@@ -100,9 +124,7 @@ public class RecordNoteActivity extends AppCompatActivity {
     }
 
     private void startRecording() {
-
         stopMediaPlayer();
-
         audioSavePath = getExternalFilesDir(Environment.DIRECTORY_MUSIC).getAbsolutePath() + "/" + "recordingAudio.mp3";
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -138,6 +160,4 @@ public class RecordNoteActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }

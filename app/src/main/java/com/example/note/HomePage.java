@@ -8,16 +8,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
+import com.airbnb.lottie.L;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 // HomePage.java
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.List;
+
 public class HomePage extends AppCompatActivity {
 
     private SimpleNoteAdapter simpleNoteAdapter;
-
+    private RecordNoteAdapter recordNoteAdapter;
     private ListNoteAdapter listNoteAdapter;
     private RecyclerView recyclerView;
     private AppDatabase db;
@@ -61,8 +64,10 @@ public class HomePage extends AppCompatActivity {
                     recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
                     recyclerView.setAdapter(listNoteAdapter);
                 } else if (tab.getPosition() == 2) {
-                    simpleNoteAdapter = null;
-                    recyclerView.setAdapter(simpleNoteAdapter);
+                    List<RecordNote> recordNotes = db.getRecordNoteDao().getAll();
+                    recordNoteAdapter = new RecordNoteAdapter(recordNotes, HomePage.this);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
+                    recyclerView.setAdapter(recordNoteAdapter);
                 }
             }
 
@@ -101,6 +106,12 @@ public class HomePage extends AppCompatActivity {
                 recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
                 recyclerView.setAdapter(listNoteAdapter);
                 tabLayout.selectTab(tabLayout.getTabAt(1));
+            } else if (getIntent().getExtras().getString("class").equals("recordNote")) {
+                List<RecordNote> recordNotes = db.getRecordNoteDao().getAll();
+                recordNoteAdapter = new RecordNoteAdapter(recordNotes, HomePage.this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
+                recyclerView.setAdapter(recordNoteAdapter);
+                tabLayout.selectTab(tabLayout.getTabAt(2));
             }
         }
     }
