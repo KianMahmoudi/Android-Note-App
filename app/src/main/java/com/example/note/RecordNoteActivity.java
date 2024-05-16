@@ -108,13 +108,20 @@ public class RecordNoteActivity extends AppCompatActivity {
         });
 
         saveBtn.setOnClickListener(v -> {
-            String titleText = title.getText().toString();
-            if (audioSavePath != null && !audioSavePath.isEmpty()) {
-                RecordNote recordNote = new RecordNote(titleText, audioSavePath);
-                db.getRecordNoteDao().insert(recordNote);
-                Toast.makeText(this, "Recording saved successfully", Toast.LENGTH_SHORT).show();
+
+            if (getIntent().hasExtra("id")) {
+                long id = getIntent().getLongExtra("id", 0);
+                RecordNote recordNote = db.getRecordNoteDao().getById(id);
+                recordNote.setTitle(title.getText().toString());
+                recordNote.setPath(audioSavePath);
+                db.getRecordNoteDao().update(recordNote);
             } else {
-                Toast.makeText(this, "No recording found to save", Toast.LENGTH_SHORT).show();
+                String titleText = title.getText().toString();
+                if (audioSavePath != null && !audioSavePath.isEmpty()) {
+                    RecordNote recordNote = new RecordNote(titleText, audioSavePath);
+                    db.getRecordNoteDao().insert(recordNote);
+                } else {
+                }
             }
             Intent i = new Intent(this, HomePage.class);
             i.putExtra("class", "recordNote");
