@@ -53,6 +53,13 @@ public class RecordNoteActivity extends AppCompatActivity {
 
         btnClose.setOnClickListener(v -> finish());
 
+        if (getIntent().hasExtra("id")) {
+            long id = getIntent().getLongExtra("id", 0);
+            RecordNote recordNote = db.getRecordNoteDao().getById(id);
+            title.setText(recordNote.getTitle());
+            audioSavePath = recordNote.getPath();
+        }
+
         recordingAudio.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:

@@ -1,6 +1,7 @@
 package com.example.note;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,13 @@ public class RecordNoteAdapter extends RecyclerView.Adapter<RecordNoteAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, RecordNoteActivity.class);
+            intent.putExtra("id", recordNotes.get(position).getId());
+            intent.putExtra("title", recordNotes.get(position).getTitle());
+            intent.putExtra("filePath", recordNotes.get(position).getPath());
+            context.startActivity(intent);
+        });
         holder.btnDelete.setOnClickListener(v -> {
             builder = new AlertDialog.Builder(context);
             builder.setTitle("Are you sure?");
