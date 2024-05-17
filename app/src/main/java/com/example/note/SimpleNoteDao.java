@@ -12,6 +12,7 @@ import java.util.List;
 public interface SimpleNoteDao {
     @Insert
     long insert(SimpleNote simpleNote);
+
     @Delete
     void delete(SimpleNote simpleNote);
 
@@ -24,5 +25,6 @@ public interface SimpleNoteDao {
     @Update
     void update(SimpleNote simpleNote);
 
+    @Query("SELECT * FROM SimpleNote WHERE title LIKE '%' || :query || '%'")
+    List<SimpleNote> searchNote(String query);
 }
-

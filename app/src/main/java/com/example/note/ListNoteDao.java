@@ -19,10 +19,12 @@ public interface ListNoteDao {
     @Query("SELECT * FROM ListNote")
     List<ListNote> getAll();
 
-    @Query("SELECT * FROM ListNote WHERE id = :id ")
+    @Query("SELECT * FROM ListNote WHERE id = :id")
     ListNote getById(long id);
 
     @Update
     void update(ListNote listNote);
 
+    @Query("SELECT * FROM ListNote WHERE title LIKE '%' || :query || '%'")
+    List<ListNote> searchNote(String query);
 }

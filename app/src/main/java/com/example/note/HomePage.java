@@ -1,6 +1,9 @@
 package com.example.note;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,11 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.room.Room;
 
-import com.airbnb.lottie.L;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-// HomePage.java
-
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
@@ -25,6 +24,7 @@ public class HomePage extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AppDatabase db;
     private TabLayout tabLayout;
+    private EditText searchEt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,78 +43,86 @@ public class HomePage extends AppCompatActivity {
             return false;
         });
 
-        db = Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "notes").allowMainThreadQueries().build();
+        db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "notes").allowMainThreadQueries().build();
 
         recyclerView = findViewById(R.id.recyclerView);
-
         tabLayout = findViewById(R.id.tabs_homePage);
+        searchEt = findViewById(R.id.searchEt);
 
+        setupTabSelection();
+        setupSearchFilter();
+    }
+
+    private void setupTabSelection() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    java.util.List<SimpleNote> simpleNotes = db.getSimpleNoteDao().getAll();
-                    simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, HomePage.this);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
-                    recyclerView.setAdapter(simpleNoteAdapter);
-                } else if (tab.getPosition() == 1) {
-                    java.util.List<ListNote> listNotes = db.getListNoteDao().getAll();
-                    listNoteAdapter = new ListNoteAdapter(listNotes, HomePage.this);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
-                    recyclerView.setAdapter(listNoteAdapter);
-                } else if (tab.getPosition() == 2) {
-                    List<RecordNote> recordNotes = db.getRecordNoteDao().getAll();
-                    recordNoteAdapter = new RecordNoteAdapter(recordNotes, HomePage.this);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
-                    recyclerView.setAdapter(recordNoteAdapter);
-                }
+                loadNotesForTab(tab.getPosition());
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
+    }
 
+    private void setupSearchFilter() {
+        searchEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                loadNotesForTab(tabLayout.getSelectedTabPosition());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void loadNotesForTab(int tabIndex) {
+        String query = searchEt.getText().toString();
+        if (tabIndex == 0) {
+            List<SimpleNote> simpleNotes = query.isEmpty() ? db.getSimpleNoteDao().getAll() : db.getSimpleNoteDao().searchNote(query);
+            simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, HomePage.this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
+            recyclerView.setAdapter(simpleNoteAdapter);
+        } else if (tabIndex == 1) {
+            List<ListNote> listNotes = query.isEmpty() ? db.getListNoteDao().getAll() : db.getListNoteDao().searchNote(query);
+            listNoteAdapter = new ListNoteAdapter(listNotes, HomePage.this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
+            recyclerView.setAdapter(listNoteAdapter);
+        } else if (tabIndex == 2) {
+            List<RecordNote> recordNotes = query.isEmpty() ? db.getRecordNoteDao().getAll() : db.getRecordNoteDao().searchNote(query);
+            recordNoteAdapter = new RecordNoteAdapter(recordNotes, HomePage.this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
+            recyclerView.setAdapter(recordNoteAdapter);
+        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        java.util.List<SimpleNote> simpleNotes = db.getSimpleNoteDao().getAll();
-        simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(simpleNoteAdapter);
+        loadNotesForTab(tabLayout.getSelectedTabPosition());
 
         if (getIntent().hasExtra("class")) {
-            if (getIntent().getExtras().getString("class").equals("simpleNote")) {
-                java.util.List<SimpleNote> simpleNotesTwo = db.getSimpleNoteDao().getAll();
-                simpleNoteAdapter = new SimpleNoteAdapter(simpleNotes, this);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView.setAdapter(simpleNoteAdapter);
-                tabLayout.selectTab(tabLayout.getTabAt(0));
-            } else if (getIntent().getExtras().getString("class").equals("listNote")) {
-                java.util.List<ListNote> listNotes = db.getListNoteDao().getAll();
-                listNoteAdapter = new ListNoteAdapter(listNotes, HomePage.this);
-                recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
-                recyclerView.setAdapter(listNoteAdapter);
-                tabLayout.selectTab(tabLayout.getTabAt(1));
-            } else if (getIntent().getExtras().getString("class").equals("recordNote")) {
-                List<RecordNote> recordNotes = db.getRecordNoteDao().getAll();
-                recordNoteAdapter = new RecordNoteAdapter(recordNotes, HomePage.this);
-                recyclerView.setLayoutManager(new LinearLayoutManager(HomePage.this));
-                recyclerView.setAdapter(recordNoteAdapter);
-                tabLayout.selectTab(tabLayout.getTabAt(2));
+            String intentClass = getIntent().getStringExtra("class");
+            if (intentClass != null) {
+                switch (intentClass) {
+                    case "simpleNote":
+                        tabLayout.selectTab(tabLayout.getTabAt(0));
+                        break;
+                    case "listNote":
+                        tabLayout.selectTab(tabLayout.getTabAt(1));
+                        break;
+                    case "recordNote":
+                        tabLayout.selectTab(tabLayout.getTabAt(2));
+                        break;
+                }
             }
         }
     }
-
-
 }

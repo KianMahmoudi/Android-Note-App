@@ -26,4 +26,6 @@ public interface RecordNoteDao {
     @Query("SELECT * FROM RecordNotes WHERE id = :id")
     RecordNote getById(long id);
 
+    @Query("SELECT * FROM RecordNotes WHERE title LIKE '%' || :query || '%'")
+    List<RecordNote> searchNote(String query);
 }
