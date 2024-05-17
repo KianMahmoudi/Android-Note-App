@@ -83,6 +83,7 @@
         android:gravity="center">
 
         <TextView
+            android:id="@+id/duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -100,22 +101,27 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/replay_10_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:src="@drawable/ic_replay_10_sec"
             android:tint="@color/background" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/playingAudio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:src="@drawable/ic_play"
             android:tint="@color/background" />
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/forward_10_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:src="@drawable/ic_forward_10_sec"
             android:tint="@color/background" />
 
@@ -127,11 +133,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="34dp"
         android:layout_marginEnd="34dp"
-        app:backgroundTint="@color/btn_color"
+        android:fontFamily="@font/open_sans_bold"
         android:text="Record"
         android:textColor="@color/white"
         android:textSize="24dp"
-        android:fontFamily="@font/open_sans_bold"
-        />
+        app:backgroundTint="@color/btn_color" />
 
 </LinearLayout>

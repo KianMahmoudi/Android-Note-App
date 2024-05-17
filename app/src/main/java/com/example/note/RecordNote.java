@@ -17,6 +17,17 @@ public class RecordNote {
     @ColumnInfo(name = "path")
     private String path;
 
+    @ColumnInfo(name = "duration")
+    private String duration;
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,8 +52,10 @@ public class RecordNote {
         this.path = path;
     }
 
-    public RecordNote(String title, String path) {
+    public RecordNote(String title, String path, String duration) {
         this.title = title;
         this.path = path;
+        this.duration = duration;
     }
+
 }

@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -20,10 +21,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.room.Room;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class RecordNoteActivity extends AppCompatActivity {
 
@@ -36,6 +38,10 @@ public class RecordNoteActivity extends AppCompatActivity {
     private ExtendedFloatingActionButton saveBtn;
     private TextInputEditText title;
     private AppDatabase db;
+    private ImageView replay;
+    private ImageView forward;
+    private ImageView btnClose;
+    private TextView duration;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,9 +52,11 @@ public class RecordNoteActivity extends AppCompatActivity {
         playingAudio = findViewById(R.id.playingAudio);
         saveBtn = findViewById(R.id.fab_save_RecordNote);
         title = findViewById(R.id.note_title_recordNote);
-        ImageView btnClose = findViewById(R.id.btn_close_recordNote);
+        btnClose = findViewById(R.id.btn_close_recordNote);
+        replay = findViewById(R.id.replay_10_sec);
+        forward = findViewById(R.id.forward_10_sec);
+        duration = findViewById(R.id.duration);
 
-        // Initialize Room database
         db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "notes").allowMainThreadQueries().build();
 
         btnClose.setOnClickListener(v -> finish());
@@ -58,6 +66,7 @@ public class RecordNoteActivity extends AppCompatActivity {
             RecordNote recordNote = db.getRecordNoteDao().getById(id);
             title.setText(recordNote.getTitle());
             audioSavePath = recordNote.getPath();
+            duration.setText(recordNote.getDuration());
         }
 
         recordingAudio.setOnTouchListener((v, event) -> {
@@ -87,6 +96,7 @@ public class RecordNoteActivity extends AppCompatActivity {
                         playingStatus = 0;
                         playingAudio.setImageResource(R.drawable.ic_play);
                     });
+                    mediaPlayer.setOnPreparedListener(mp -> setDuration());
                     try {
                         mediaPlayer.setDataSource(audioSavePath);
                         mediaPlayer.prepare();
@@ -108,24 +118,42 @@ public class RecordNoteActivity extends AppCompatActivity {
         });
 
         saveBtn.setOnClickListener(v -> {
-
             if (getIntent().hasExtra("id")) {
                 long id = getIntent().getLongExtra("id", 0);
                 RecordNote recordNote = db.getRecordNoteDao().getById(id);
                 recordNote.setTitle(title.getText().toString());
                 recordNote.setPath(audioSavePath);
+                recordNote.setDuration(duration.getText().toString());
                 db.getRecordNoteDao().update(recordNote);
             } else {
                 String titleText = title.getText().toString();
                 if (audioSavePath != null && !audioSavePath.isEmpty()) {
-                    RecordNote recordNote = new RecordNote(titleText, audioSavePath);
+                    RecordNote recordNote = new RecordNote(titleText, audioSavePath,duration.getText().toString());
                     db.getRecordNoteDao().insert(recordNote);
                 } else {
+                    Toast.makeText(this, "No recording found to save", Toast.LENGTH_SHORT).show();
                 }
             }
             Intent i = new Intent(this, HomePage.class);
             i.putExtra("class", "recordNote");
             startActivity(i);
+        });
+
+        replay.setOnClickListener(v -> {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                int newPosition = Math.max(currentPosition - 10000, 0);
+                mediaPlayer.seekTo(newPosition);
+            }
+        });
+
+        forward.setOnClickListener(v -> {
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                int currentPosition = mediaPlayer.getCurrentPosition();
+                int duration = mediaPlayer.getDuration();
+                int newPosition = Math.min(currentPosition + 10000, duration);
+                mediaPlayer.seekTo(newPosition);
+            }
         });
     }
 
@@ -159,6 +187,7 @@ public class RecordNoteActivity extends AppCompatActivity {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
+            setDuration();
         }
     }
 
@@ -169,9 +198,39 @@ public class RecordNoteActivity extends AppCompatActivity {
                 mediaRecorder.release();
                 mediaRecorder = null;
                 Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show();
+                setDurationAfterRecording();
             } catch (RuntimeException e) {
                 Log.e("RecordNote", "Error stopping recording: " + e.getMessage());
             }
+        }
+    }
+
+    private void setDuration() {
+        if (mediaPlayer != null) {
+            int durationInMillis = mediaPlayer.getDuration();
+            String durationString = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(durationInMillis),
+                    TimeUnit.MILLISECONDS.toMinutes(durationInMillis) % TimeUnit.HOURS.toMinutes(1),
+                    TimeUnit.MILLISECONDS.toSeconds(durationInMillis) % TimeUnit.MINUTES.toSeconds(1));
+            duration.setText(durationString);
+        }
+    }
+
+    private void setDurationAfterRecording() {
+        MediaPlayer tempMediaPlayer = new MediaPlayer();
+        try {
+            tempMediaPlayer.setDataSource(audioSavePath);
+            tempMediaPlayer.prepare();
+            int durationInMillis = tempMediaPlayer.getDuration();
+            String durationString = String.format("%02d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(durationInMillis),
+                    TimeUnit.MILLISECONDS.toMinutes(durationInMillis) % TimeUnit.HOURS.toMinutes(1),
+                    TimeUnit.MILLISECONDS.toSeconds(durationInMillis) % TimeUnit.MINUTES.toSeconds(1));
+            duration.setText(durationString);
+        } catch (IOException e) {
+            Log.e("RecordNote", "Error setting duration after recording: " + e.getMessage());
+        } finally {
+            tempMediaPlayer.release();
         }
     }
 }
