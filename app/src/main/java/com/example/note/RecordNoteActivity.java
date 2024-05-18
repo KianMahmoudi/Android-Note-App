@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.room.Room;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -42,6 +43,7 @@ public class RecordNoteActivity extends AppCompatActivity {
     private ImageView forward;
     private ImageView btnClose;
     private TextView duration;
+    private LottieAnimationView animation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class RecordNoteActivity extends AppCompatActivity {
         replay = findViewById(R.id.replay_10_sec);
         forward = findViewById(R.id.forward_10_sec);
         duration = findViewById(R.id.duration);
+        animation = findViewById(R.id.animation);
 
         db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "notes").allowMainThreadQueries().build();
 
@@ -75,6 +78,8 @@ public class RecordNoteActivity extends AppCompatActivity {
                     Log.d("RecordNote", "ACTION_DOWN event fired");
                     if (checkPermissions()) {
                         startRecording();
+                        animation.playAnimation();
+                        animation.loop(true);
                     } else {
                         ActivityCompat.requestPermissions(RecordNoteActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, 1);
                     }
@@ -82,6 +87,8 @@ public class RecordNoteActivity extends AppCompatActivity {
                 case MotionEvent.ACTION_UP:
                     Log.d("RecordNote", "ACTION_UP event fired");
                     stopRecording();
+                    animation.pauseAnimation();
+                    animation.loop(false);
                     return true;
                 default:
                     return false;
@@ -95,6 +102,8 @@ public class RecordNoteActivity extends AppCompatActivity {
                     mediaPlayer.setOnCompletionListener(mp -> {
                         playingStatus = 0;
                         playingAudio.setImageResource(R.drawable.ic_play);
+                        animation.pauseAnimation();
+                        animation.loop(false);
                     });
                     mediaPlayer.setOnPreparedListener(mp -> setDuration());
                     try {
@@ -109,13 +118,18 @@ public class RecordNoteActivity extends AppCompatActivity {
                     mediaPlayer.start();
                     playingAudio.setImageResource(R.drawable.ic_pause);
                     playingStatus = 1;
+                    animation.playAnimation();
+                    animation.loop(true);
                 } else {
                     mediaPlayer.pause();
                     playingAudio.setImageResource(R.drawable.ic_play);
                     playingStatus = 0;
+                    animation.pauseAnimation();
+                    animation.loop(false);
                 }
             }
         });
+
 
         saveBtn.setOnClickListener(v -> {
             if (getIntent().hasExtra("id")) {
@@ -128,7 +142,7 @@ public class RecordNoteActivity extends AppCompatActivity {
             } else {
                 String titleText = title.getText().toString();
                 if (audioSavePath != null && !audioSavePath.isEmpty()) {
-                    RecordNote recordNote = new RecordNote(titleText, audioSavePath,duration.getText().toString());
+                    RecordNote recordNote = new RecordNote(titleText, audioSavePath, duration.getText().toString());
                     db.getRecordNoteDao().insert(recordNote);
                 } else {
                     Toast.makeText(this, "No recording found to save", Toast.LENGTH_SHORT).show();
@@ -143,7 +157,10 @@ public class RecordNoteActivity extends AppCompatActivity {
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 int currentPosition = mediaPlayer.getCurrentPosition();
                 int newPosition = Math.max(currentPosition - 10000, 0);
-                mediaPlayer.seekTo(newPosition);
+                if (currentPosition > newPosition)
+                    mediaPlayer.seekTo(newPosition);
+                else
+                    stopMediaPlayer();
             }
         });
 
@@ -152,7 +169,10 @@ public class RecordNoteActivity extends AppCompatActivity {
                 int currentPosition = mediaPlayer.getCurrentPosition();
                 int duration = mediaPlayer.getDuration();
                 int newPosition = Math.min(currentPosition + 10000, duration);
-                mediaPlayer.seekTo(newPosition);
+                if (currentPosition < newPosition)
+                    mediaPlayer.seekTo(newPosition);
+                else
+                    stopMediaPlayer();
             }
         });
     }
@@ -176,6 +196,8 @@ public class RecordNoteActivity extends AppCompatActivity {
         try {
             mediaRecorder.prepare();
             mediaRecorder.start();
+            animation.playAnimation();
+            animation.loop(true);
             Toast.makeText(this, "Start Recording", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
             Log.e("RecordNote", "Error starting recording: " + e.getMessage());
@@ -188,6 +210,8 @@ public class RecordNoteActivity extends AppCompatActivity {
             mediaPlayer.release();
             mediaPlayer = null;
             setDuration();
+            animation.pauseAnimation();
+            animation.loop(false);
         }
     }
 
@@ -199,6 +223,8 @@ public class RecordNoteActivity extends AppCompatActivity {
                 mediaRecorder = null;
                 Toast.makeText(this, "Stop Recording", Toast.LENGTH_SHORT).show();
                 setDurationAfterRecording();
+                animation.pauseAnimation();
+                animation.loop(false);
             } catch (RuntimeException e) {
                 Log.e("RecordNote", "Error stopping recording: " + e.getMessage());
             }
@@ -232,5 +258,12 @@ public class RecordNoteActivity extends AppCompatActivity {
         } finally {
             tempMediaPlayer.release();
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        playingStatus = 0;
+        stopMediaPlayer();
     }
 }
