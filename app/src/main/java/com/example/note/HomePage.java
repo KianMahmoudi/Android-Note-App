@@ -81,13 +81,17 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 loadNotesForTab(tabLayout.getSelectedTabPosition());
-
+                if (s.length() == 0) {
+                    searchEt.setHint("Search Note...");
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                searchEt.setHint(null);
-
+                if (s.length() == 0) {
+                    searchEt.setHint("Search Note...");
+                } else
+                    searchEt.setHint(null);
             }
         });
     }
