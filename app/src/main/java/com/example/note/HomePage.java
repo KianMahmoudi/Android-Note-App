@@ -3,6 +3,7 @@ package com.example.note;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
@@ -61,25 +62,33 @@ public class HomePage extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {}
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {}
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
         });
     }
 
     private void setupSearchFilter() {
         searchEt.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 loadNotesForTab(tabLayout.getSelectedTabPosition());
+
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+                searchEt.setHint(null);
+
+            }
         });
     }
 

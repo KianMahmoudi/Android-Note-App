@@ -10,29 +10,27 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
+
+        <EditText
+            android:id="@+id/searchEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Search note"
+            android:layout_margin="12dp"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/edit_text_background"
+            android:drawableStart="@drawable/ic_search_24dp"
+            android:fontFamily="@font/open_sans_bold"
+            android:hint="Search Note..."
+
+            android:imeOptions="actionDone"
             android:padding="12dp"
-            android:textColorHint="@color/white"
-            app:startIconTint="@color/white">
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/searchEt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                android:layout_marginStart="24dp"
-                android:background="@drawable/edit_text_background"
-                android:drawableStart="@drawable/ic_search_24dp"
-                android:fontFamily="@font/open_sans_bold" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
     </FrameLayout>
 
@@ -62,7 +60,7 @@
                 android:text="Lists" />
 
             <com.google.android.material.tabs.TabItem
-                android:id="@+id/tab_1"
+                android:id="@+id/tab_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recordings" />
@@ -85,7 +83,6 @@
             tools:listitem="@layout/item_simple_note" />
 
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
