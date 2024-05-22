@@ -33,7 +33,7 @@ public class SimpleNoteActivity extends Activity {
         saveBtn = findViewById(R.id.fab_save_simpleNote);
 
         ImageView btnClose = findViewById(R.id.btn_close_simpleNote);
-        btnClose.setOnClickListener(v -> finish());
+        btnClose.setOnClickListener(v -> navigateToHomePage());
 
         db = Room.databaseBuilder(getApplicationContext(),
                 AppDatabase.class, "notes").allowMainThreadQueries().build();
@@ -57,9 +57,7 @@ public class SimpleNoteActivity extends Activity {
                 SimpleNote simpleNote = new SimpleNote(noteTitle.getText().toString(), noteText.getText().toString());
                 db.getSimpleNoteDao().insert(simpleNote);
             }
-            Intent i = new Intent(this, HomePage.class);
-            i.putExtra("class", "simpleNote");
-            startActivity(i);
+            navigateToHomePage();
         });
 
     }
@@ -72,4 +70,12 @@ public class SimpleNoteActivity extends Activity {
         startActivity(i);
         finish();
     }
+
+    private void navigateToHomePage() {
+        Intent i = new Intent(this, HomePage.class);
+        i.putExtra("class", "simpleNote");
+        startActivity(i);
+        finish();
+    }
+
 }

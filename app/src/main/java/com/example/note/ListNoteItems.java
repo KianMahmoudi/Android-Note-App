@@ -1,27 +1,27 @@
 package com.example.note;
 
 public class ListNoteItems {
-        private String description;
-        private boolean isChecked;
+    private String description;
+    private boolean isChecked;
 
-        public ListNoteItems(String description, boolean isChecked) {
-            this.description = description;
-            this.isChecked = isChecked;
-        }
+    public ListNoteItems(String description, boolean isChecked) {
+        this.description = description;
+        this.isChecked = isChecked;
+    }
 
-        public String getDescription() {
-            return description;
-        }
+    public String getDescription() {
+        return description;
+    }
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-        public boolean isChecked() {
-            return isChecked;
-        }
+    public boolean isChecked() {
+        return isChecked;
+    }
 
-        public void setChecked(boolean checked) {
-            isChecked = checked;
-        }
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 }

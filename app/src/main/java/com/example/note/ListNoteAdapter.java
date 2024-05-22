@@ -54,6 +54,7 @@ public class ListNoteAdapter extends RecyclerView.Adapter<ListNoteAdapter.ViewHo
                         db.getListNoteDao().delete(listNotes.get(position));
                         listNotes.remove(position);
                         notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, listNotes.size());
                     })
                     .setNegativeButton("No", (dialog, which) -> {
                         dialog.cancel();

@@ -62,7 +62,7 @@ public class RecordNoteActivity extends AppCompatActivity {
 
         db = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "notes").allowMainThreadQueries().build();
 
-        btnClose.setOnClickListener(v -> finish());
+        btnClose.setOnClickListener(v -> navigateToHomePage());
 
         if (getIntent().hasExtra("id")) {
             long id = getIntent().getLongExtra("id", 0);
@@ -148,9 +148,7 @@ public class RecordNoteActivity extends AppCompatActivity {
                     Toast.makeText(this, "No recording found to save", Toast.LENGTH_SHORT).show();
                 }
             }
-            Intent i = new Intent(this, HomePage.class);
-            i.putExtra("class", "recordNote");
-            startActivity(i);
+            navigateToHomePage();
         });
 
         replay.setOnClickListener(v -> {
@@ -266,4 +264,12 @@ public class RecordNoteActivity extends AppCompatActivity {
         playingStatus = 0;
         stopMediaPlayer();
     }
+
+    private void navigateToHomePage() {
+        Intent i = new Intent(this, HomePage.class);
+        i.putExtra("class", "recordNote");
+        startActivity(i);
+        finish();
+    }
+
 }

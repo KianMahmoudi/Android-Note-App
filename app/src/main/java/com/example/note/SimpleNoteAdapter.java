@@ -56,6 +56,7 @@ public class SimpleNoteAdapter extends RecyclerView.Adapter<SimpleNoteAdapter.Vi
                         db.getSimpleNoteDao().delete(simpleNotes.get(position));
                         simpleNotes.remove(position);
                         notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, simpleNotes.size());
                     }).setNegativeButton("No", (dialog, which) -> {
                         dialog.cancel();
                     });

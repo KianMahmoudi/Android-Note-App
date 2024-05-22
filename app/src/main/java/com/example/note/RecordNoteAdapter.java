@@ -54,6 +54,7 @@ public class RecordNoteAdapter extends RecyclerView.Adapter<RecordNoteAdapter.Vi
                         db.getRecordNoteDao().delete(recordNotes.get(position));
                         recordNotes.remove(position);
                         notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, recordNotes.size());
                     }).setNegativeButton("No", (dialog, which) -> {
                         dialog.cancel();
                     });

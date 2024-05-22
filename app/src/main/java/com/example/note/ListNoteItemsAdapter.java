@@ -1,13 +1,14 @@
 package com.example.note;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,17 +35,15 @@ public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdap
 
     public void addItem(ListNoteItems item) {
         items.add(item);
-        updateItems(items);
-    }
-
-    public void removeItem(ListNoteItems item, int position) {
-        items.remove(item);
-        notifyItemRemoved(position);
-    }
-
-    public void updateItems(List<ListNoteItems> items) {
-        this.items = items;
         notifyItemInserted(items.size() - 1);
+    }
+
+    public void removeItem(int position) {
+        if (position >= 0 && position < items.size()) {
+            items.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, items.size());
+        }
     }
 
     @NonNull
@@ -57,9 +56,7 @@ public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdap
     @Override
     public void onBindViewHolder(@NonNull ItemsViewHolder holder, int position) {
         holder.bind(position);
-        holder.deleteBtn.setOnClickListener(v -> {
-            removeItem(items.get(position), position);
-        });
+        holder.deleteBtn.setOnClickListener(v -> removeItem(holder.getAdapterPosition()));
     }
 
     @Override
@@ -77,13 +74,33 @@ public class ListNoteItemsAdapter extends RecyclerView.Adapter<ListNoteItemsAdap
             editText = itemView.findViewById(R.id.editText);
             checkBox = itemView.findViewById(R.id.checkBox);
             deleteBtn = itemView.findViewById(R.id.btn_delete);
-
         }
 
         public void bind(int position) {
             ListNoteItems item = items.get(position);
             editText.setText(item.getDescription());
             checkBox.setChecked(item.isChecked());
+
+            // Listen for changes in the CheckBox state
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                item.setChecked(isChecked);
+            });
+
+            // Listen for changes in the EditText
+            editText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    item.setDescription(s.toString());
+                }
+            });
         }
     }
 }
