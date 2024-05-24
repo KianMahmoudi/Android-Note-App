@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -32,11 +31,10 @@
             android:fontFamily="@font/opan_sans_medium"
             android:text="Save"
             android:textAlignment="gravity"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/btn_color"
+
             app:icon="@drawable/ic_check_24"
             app:iconGravity="textEnd"
-            app:iconTint="@color/white" />
+   />
 
     </LinearLayout>
 
@@ -53,11 +51,9 @@
             android:id="@+id/note_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000"
             android:hint="Title"
             android:padding="12dp"
-            android:textColor="@color/black"
-            android:textColorHint="@color/dialog_addNote_text_color"
+
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -67,7 +63,7 @@
         android:id="@+id/recyclerViewItems"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
+        android:layout_marginLeft="9dp"
         android:layout_weight="1" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -76,7 +72,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/btn_color"
         app:srcCompat="@drawable/ic_add_24" />
 
 </LinearLayout>

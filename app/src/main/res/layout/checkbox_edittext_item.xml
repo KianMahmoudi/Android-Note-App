@@ -9,7 +9,7 @@
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:buttonTint="@color/black" />
+        />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
@@ -24,7 +24,6 @@
             android:background="#00000000"
             android:ellipsize="middle"
             android:hint="do this..."
-            android:textColor="@color/black"
             android:textSize="20dp"
             android:layout_marginRight="16dp"
             android:textStyle="normal"
@@ -38,9 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@color/white"
         android:src="@drawable/ic_delete"
+        android:backgroundTint="@color/md_theme_background"
         android:visibility="visible"
-        app:tint="@color/black" />
+        />
 
 </LinearLayout>

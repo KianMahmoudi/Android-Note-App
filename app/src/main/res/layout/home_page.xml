@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+
     android:orientation="vertical"
     tools:context=".HomePage">
 
@@ -20,16 +20,14 @@
             android:layout_height="wrap_content"
             android:layout_margin="12dp"
             android:layout_marginStart="24dp"
-            android:background="@drawable/edit_text_background"
+            android:background="@null"
             android:drawableStart="@drawable/ic_search_24dp"
-            android:fontFamily="@font/open_sans_bold"
+            android:drawablePadding="8dp"
+            android:fontFamily="@font/open_sand_regular"
             android:hint="Search Note..."
-
             android:imeOptions="actionDone"
             android:padding="12dp"
-            android:singleLine="true"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white" />
+            android:singleLine="true" />
 
 
     </FrameLayout>
@@ -40,12 +38,9 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs_homePage"
-            style="@style/text_tab"
+
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background"
-            app:tabIndicatorColor="@color/white"
-            app:tabTextColor="@color/white">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.tabs.TabItem
                 android:id="@+id/tab_1"
@@ -91,12 +86,10 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
-            style="@style/navigation_bar"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:backgroundTint="@color/white"
-            app:itemTextColor="#9791b6"
+
             app:menu="@menu/menu" />
 
     </LinearLayout>

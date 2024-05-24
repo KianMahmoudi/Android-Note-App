@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_close_24" />
+            android:src="@drawable/ic_close_24"
+           />
 
         <View
             android:layout_width="0dp"
@@ -32,11 +32,9 @@
             android:fontFamily="@font/opan_sans_medium"
             android:text="Save"
             android:textAlignment="gravity"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/btn_color"
+
             app:icon="@drawable/ic_check_24"
-            app:iconGravity="textEnd"
-            app:iconTint="@color/white" />
+            app:iconGravity="textEnd" />
 
     </LinearLayout>
 
@@ -56,12 +54,10 @@
                 android:id="@+id/note_title_recordNote"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00000000"
                 android:gravity="center"
                 android:hint="new record note"
                 android:padding="12dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/dialog_addNote_text_color"
+
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -88,7 +84,7 @@
             android:layout_margin="16dp"
             android:fontFamily="@font/open_sans_bold"
             android:text="00:00:00"
-            android:textColor="@color/background"
+
             android:textSize="56dp" />
 
     </LinearLayout>
@@ -104,25 +100,22 @@
             android:id="@+id/replay_10_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:src="@drawable/ic_replay_10_sec"
-            android:tint="@color/background" />
+            android:backgroundTint="@color/md_theme_background"
+            android:src="@drawable/ic_replay_10_sec" />
 
         <ImageButton
             android:id="@+id/playingAudio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:src="@drawable/ic_play"
-            android:tint="@color/background" />
+            android:backgroundTint="@color/md_theme_background"
+            android:src="@drawable/ic_play" />
 
         <ImageButton
             android:id="@+id/forward_10_sec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:src="@drawable/ic_forward_10_sec"
-            android:tint="@color/background" />
+            android:backgroundTint="@color/md_theme_background"
+            android:src="@drawable/ic_forward_10_sec" />
 
     </LinearLayout>
 
@@ -134,8 +127,7 @@
         android:layout_marginEnd="34dp"
         android:fontFamily="@font/open_sans_bold"
         android:text="Record"
-        android:textColor="@color/white"
-        android:textSize="24dp"
-        app:backgroundTint="@color/btn_color" />
+
+        android:textSize="24dp" />
 
 </LinearLayout>
