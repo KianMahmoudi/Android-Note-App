@@ -207,6 +207,8 @@ public class RecordNoteActivity extends AppCompatActivity {
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
+            playingStatus = 0;
+            playingAudio.setImageResource(R.drawable.ic_play);
             setDuration();
             animation.pauseAnimation();
             animation.loop(false);
